@@ -1,0 +1,113 @@
+//
+//  LittleCircleLovelyView.m
+//  XiaoLiuFisheries
+//
+//  Created by Livespro on 2017/6/3.
+//  Copyright © 2017年 福中集团软件公司. All rights reserved.
+//
+
+#import "LittleCircleLovelyView.h"
+
+@interface LittleCircleLovelyView ()
+
+@property (nonatomic, strong)  UILabel *lable;
+
+@property (nonatomic, strong)  UIImageView *imageView;
+
+@end
+
+@implementation LittleCircleLovelyView
+
+- (instancetype)initWithFrame:(CGRect)frame ImageName:(NSString *)imageName;{
+    
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        self.imageView.tintColor = Colorfff;//初始图片白色
+        
+        self.backgroundColor = [UIColor colorWithHexString:@"000000" alpha:.3f];
+        
+        self.imageView.image = [[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        
+        [self setRadius:frame.size.width/2 borderWidth:0 borderColor:[UIColor clearColor]];
+        
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame TitleName:(NSString *)titleName;{
+
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        self.lable.text = titleName;
+        
+        self.backgroundColor = [UIColor colorWithHexString:@"000000" alpha:.3f];
+        
+        [self setRadius:frame.size.width/2 borderWidth:0 borderColor:[UIColor clearColor]];
+    }
+    return self;
+    
+}
+
+- (UILabel *)lable{
+    
+    if (!_lable) {
+        
+        _lable = [UILabel labelWithText:@"" TextFont:12 TextColor:Colorfff Frame:CGRectZero NumberOfLines:1 TextAlignment:NSTextAlignmentCenter BackgroundColor:[UIColor clearColor]];
+        
+        [self addSubview:_lable];
+        
+    }
+    return _lable;
+}
+
+- (UIImageView *)imageView{
+    
+    if (!_imageView) {
+        
+        _imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+        
+        [self addSubview:_imageView];
+    }
+    return _imageView;
+}
+
+- (void)layoutSubviews{
+    
+    if (_lable) {
+        
+        _lable.frame = self.bounds;
+    }
+    
+    if (_imageView) {
+        
+        _imageView.frame = CGRectMake(self.bounds.size.width/6, self.bounds.size.height/6, self.bounds.size.width *2/3, self.bounds.size.height *2/3);
+    }
+}
+
+
+- (void)colorTintPresent:(CGFloat)present;{
+    
+    if (present < 0.5f) {
+        
+        self.imageView.tintColor = [UIColor colorWithHexString:@"ffffff" alpha:1.0f *(1 - present * 2)];
+        
+    } else {
+        
+        self.imageView.tintColor = [UIColor colorWithHexString:@"000000" alpha:1.0f *((present - 0.5f) * 2)];
+    }
+    
+    self.backgroundColor = [UIColor colorWithHexString:@"000000" alpha:.3f *(1 - present)];
+    
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    
+    if (self.clickAction) {
+        
+        self.clickAction();
+    }
+}
+
+@end

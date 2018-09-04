@@ -1,0 +1,29 @@
+//
+//  LittleCircleLovelyView.h
+//  XiaoLiuFisheries
+//
+//  Created by Livespro on 2017/6/3.
+//  Copyright © 2017年 福中集团软件公司. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+typedef void(^ClickAction)();
+
+@interface LittleCircleLovelyView : UIView
+
+@property (nonatomic, strong)  ClickAction clickAction;
+
+- (instancetype)initWithFrame:(CGRect)frame ImageName:(NSString *)imageName;
+
+- (instancetype)initWithFrame:(CGRect)frame TitleName:(NSString *)titleName;
+
+
+/**
+ 渲染颜色渐变
+
+ @param present 百分比
+ */
+- (void)colorTintPresent:(CGFloat)present;
+
+@end
