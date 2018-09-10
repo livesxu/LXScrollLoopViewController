@@ -96,14 +96,19 @@
 
 //@optional
 
+- (void)lxScrollDidScrollIndex:(NSInteger)index {
+    
+    NSLog(@"%@", [NSString stringWithFormat:@"出现第%ld张图片",index]);
+}
+
 - (void)lxScrollSelectIndex:(NSInteger)index;{
     
     NSLog(@"%@", [NSString stringWithFormat:@"第%ld张图片",index]);
 }
 
-- (NSTimeInterval)timeIntervalWithLoop;{
-    
-    return 5;
-}
+//- (NSTimeInterval)timeIntervalWithLoop;{
+//    
+//    return 5;
+//}
 
 @end

@@ -67,7 +67,8 @@
     } else {
         _timeInterval = 0;
         //没有定时器则更改初始Offset为第一个，有定时器则没必要，time创建会fire
-        _collectionShow.contentOffset = CGPointMake(self.view.bounds.size.width, 0);
+        [self autoScroll];
+        [self judgeScrollIndex];
     }
 }
 
@@ -169,6 +170,22 @@
             
             [self.delegate lxScrollSelectIndex:indexPath.item - 1];
         }
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath;{
+
+    if (!(indexPath.item == 0 || (indexPath.item == _itemsCount + 1))) {
+        
+        [self judgeScrollIndex];
+    }
+}
+
+- (void)judgeScrollIndex {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(lxScrollDidScrollIndex:)]) {
+        
+        [self.delegate lxScrollDidScrollIndex:(NSInteger)(self.collectionShow.contentOffset.x/self.view.bounds.size.width)-1];
     }
 }
 

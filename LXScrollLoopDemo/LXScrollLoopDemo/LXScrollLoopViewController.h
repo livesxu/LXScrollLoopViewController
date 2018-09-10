@@ -23,6 +23,12 @@
 @optional
 
 /**
+ 滚动到index
+
+ @param index 下标
+ */
+- (void)lxScrollDidScrollIndex:(NSInteger)index;
+/**
  点击事件
 
  @param index 下标
