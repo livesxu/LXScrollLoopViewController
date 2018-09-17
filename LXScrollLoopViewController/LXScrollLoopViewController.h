@@ -51,6 +51,10 @@
 
 - (void)reloadData;
 
+- (void)addTimer;
+
+- (void)stopTimer;
+
 @end
 
 @interface ScrollCollectionCell : UICollectionViewCell

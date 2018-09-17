@@ -20,12 +20,15 @@
 
 @property (nonatomic, strong)  UICollectionView *collectionShow;
 
+@property (nonatomic, assign) BOOL isLoadOtherConfig;
+
 @end
 
 @implementation LXScrollLoopViewController
 
 - (void)dealloc {
     
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(addTimer) object:nil];
     [self stopTimer];
 }
 
@@ -46,6 +49,8 @@
     if (!_itemsCount) return;
     
     [self.collectionShow reloadData];
+    
+    [self otherConfig];
 }
 
 - (void)setDelegate:(id<LXScrollDelegate>)delegate {
@@ -55,24 +60,33 @@
         
         _itemsCount  = [self.delegate numberOfItemWithScroll];
         
-        if (!_itemsCount) return;
-        
         [self.view addSubview:self.collectionShow];
     }
+    
+    [self otherConfig];
+}
+
+- (void)otherConfig {
+    
+    if (!_itemsCount || _isLoadOtherConfig) return;
+    _isLoadOtherConfig = YES;
+    
     if ([self.delegate respondsToSelector:@selector(timeIntervalWithLoop)]) {
         
         _timeInterval = [self.delegate timeIntervalWithLoop];
         
-        [self addTimer];
+        [self performSelector:@selector(addTimer) withObject:nil afterDelay:_timeInterval];
     } else {
         _timeInterval = 0;
-        //没有定时器则更改初始Offset为第一个，有定时器则没必要，time创建会fire
-        [self autoScroll];
-        [self judgeScrollIndex];
     }
+    //first
+    [self.collectionShow scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]
+                                atScrollPosition:UICollectionViewScrollPositionNone
+                                        animated:NO];
+    [self judgeScrollIndex];
 }
 
-- (UICollectionView *)collectionShow{
+- (UICollectionView *)collectionShow {
     if (!_collectionShow) {
         
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -94,7 +108,9 @@
     return _collectionShow;
 }
 
-- (void)addTimer{
+- (void)addTimer {
+    
+    if (timer) return ;
     
     __weak typeof(self) weakSelf = self;
     //定时器
@@ -113,14 +129,16 @@
 - (void)autoScroll {
     NSInteger curIndex = (self.collectionShow.contentOffset.x) / self.view.bounds.size.width;
     NSInteger toIndex = curIndex + 1;
+    
+    if (!_itemsCount) return;
         
     [self.collectionShow scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:toIndex inSection:0]
                                     atScrollPosition:UICollectionViewScrollPositionNone
                                         animated:YES];
 }
 
-- (void)stopTimer
-{
+- (void)stopTimer {
+    
     if (timer) {
         dispatch_source_cancel(timer);
         timer = nil;
@@ -129,6 +147,8 @@
 
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section;{
+    
+    if (!_itemsCount) return 0;
     
     return _itemsCount + 2;
 }
@@ -182,6 +202,8 @@
 }
 
 - (void)judgeScrollIndex {
+    
+    if (!_itemsCount) return;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(lxScrollDidScrollIndex:)]) {
         
