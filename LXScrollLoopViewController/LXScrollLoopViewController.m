@@ -14,6 +14,8 @@
     dispatch_source_t timer;
 }
 
+@property (nonatomic,   copy) NSString *reuseIdentifier;
+
 @property (nonatomic, assign)  NSTimeInterval timeInterval;
 
 @property (nonatomic, assign)  NSUInteger itemsCount;
@@ -36,8 +38,10 @@
     self = [super init];
     if (self) {
         
+        _reuseIdentifier = [NSString stringWithFormat:@"%@_%p",NSStringFromClass([ScrollCollectionCell class]),self];
         self.view.frame = frame;
         self.delegate = delegate;
+        
     }
     return self;
 }
@@ -100,7 +104,7 @@
         _collectionShow.pagingEnabled = YES;
         _collectionShow.showsHorizontalScrollIndicator = NO;
         _collectionShow.showsVerticalScrollIndicator = NO;
-        [_collectionShow registerClass:[ScrollCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([ScrollCollectionCell class])];
+        [_collectionShow registerClass:[ScrollCollectionCell class] forCellWithReuseIdentifier:_reuseIdentifier];
         _collectionShow.dataSource = self;
         _collectionShow.delegate = self;
         
@@ -156,7 +160,7 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath;{
     
-    ScrollCollectionCell *collectionCell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([ScrollCollectionCell class]) forIndexPath:indexPath];
+    ScrollCollectionCell *collectionCell = [collectionView dequeueReusableCellWithReuseIdentifier:_reuseIdentifier forIndexPath:indexPath];
     
     if (indexPath.item == 0) {
         
